@@ -17,20 +17,33 @@ export default function Editor() {
     setErrorMsg(null);
     
     try {
-      const response = await fetch(
-        "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
-        {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_HF_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({ inputs: prompt }),
-        }
-      );
+      const isProd = import.meta.env.PROD;
+      const apiUrl = isProd 
+        ? "/api/generate" 
+        : "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
+      
+      const headers = { "Content-Type": "application/json" };
+      if (!isProd) {
+        headers["Authorization"] = `Bearer ${import.meta.env.VITE_HF_API_KEY}`;
+      }
+      
+      const bodyPayload = isProd ? { prompt } : { inputs: prompt };
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(bodyPayload),
+      });
       
       if (!response.ok) {
-        throw new Error("Gagal menghubungkan ke AI. Coba periksa koneksi atau API Key Anda.");
+        let errStr = "Gagal menghubungkan ke AI. Coba periksa koneksi atau API Key Anda.";
+        try {
+          const errData = await response.json();
+          errStr = errData.error || errStr;
+        } catch (e) {
+          // ignore
+        }
+        throw new Error(errStr);
       }
       
       const blob = await response.blob();
