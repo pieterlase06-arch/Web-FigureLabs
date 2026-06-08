@@ -2,8 +2,22 @@ import React from 'react';
 import Button from '../ui/Button';
 
 export default function Header() {
+  const scrollTo = (e, id) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.location.hash = '';
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
   return (
-    <header className="w-full flex justify-center py-6">
+    <header className="w-full flex justify-center py-6 z-50">
       <div className="w-full max-w-[1200px] flex items-center justify-between px-6">
         <div className="flex items-center">
           <div className="font-aeonik font-normal text-[21px] text-frost-text mr-5">
@@ -11,9 +25,9 @@ export default function Header() {
           </div>
           <div className="w-px h-5 bg-silver mx-5"></div>
           <nav className="flex gap-5">
-            <a href="#services" className="font-aeonik font-bold text-[13px] uppercase text-frost-text hover:text-amber-whisper transition-colors">Services</a>
-            <a href="#portfolio" className="font-aeonik font-bold text-[13px] uppercase text-frost-text hover:text-amber-whisper transition-colors">Portfolio</a>
-            <a href="#process" className="font-aeonik font-bold text-[13px] uppercase text-frost-text hover:text-amber-whisper transition-colors">Process</a>
+            <button onClick={(e) => scrollTo(e, 'services')} className="font-aeonik font-bold text-[13px] uppercase text-frost-text hover:text-amber-whisper transition-colors">Services</button>
+            <button onClick={(e) => scrollTo(e, 'gallery')} className="font-aeonik font-bold text-[13px] uppercase text-frost-text hover:text-amber-whisper transition-colors">Gallery</button>
+            <button onClick={(e) => scrollTo(e, 'process')} className="font-aeonik font-bold text-[13px] uppercase text-frost-text hover:text-amber-whisper transition-colors">Process</button>
           </nav>
         </div>
         
