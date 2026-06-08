@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 
 export default function Editor() {
+  const navigate = useNavigate();
   const [bgGreen, setBgGreen] = useState(false);
 
   return (
@@ -10,7 +12,7 @@ export default function Editor() {
       {/* Mini Header */}
       <header className="h-[60px] border-b border-onyx-edge flex items-center justify-between px-6 shrink-0 bg-obsidian-canvas z-20">
         <div className="flex items-center gap-4">
-          <a href="#" className="font-aeonik font-normal text-[18px] text-frost-text hover:text-amber-whisper transition-colors" onClick={() => window.location.hash = ''}>FigureLabs</a>
+          <button onClick={() => navigate('/')} className="font-aeonik font-normal text-[18px] text-frost-text hover:text-amber-whisper transition-colors cursor-pointer">FigureLabs</button>
           <div className="w-px h-4 bg-silver"></div>
           <span className="font-input text-[13px] tracking-caption text-smoke">SCIENTIFIC WORKSPACE</span>
         </div>
