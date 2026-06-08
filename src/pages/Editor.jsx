@@ -37,7 +37,11 @@ export default function Editor() {
       const imageUrl = URL.createObjectURL(blob);
       setGeneratedImage(imageUrl);
     } catch (err) {
-      setErrorMsg(err.message);
+      if (err.message === "Failed to fetch") {
+        setErrorMsg("Koneksi gagal (Failed to fetch). Pastikan Anda sudah me-Redeploy Vercel setelah memasukkan API Key, dan matikan sementara Adblocker/Shields di browser Anda.");
+      } else {
+        setErrorMsg(err.message);
+      }
     } finally {
       setIsGenerating(false);
     }

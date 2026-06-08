@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Button({ variant = 'primary', children, onClick, icon, className = '' }) {
+export default function Button({ variant = 'primary', children, onClick, icon, className = '', disabled = false }) {
   const baseStyles = "inline-flex items-center justify-center font-aeonik font-bold uppercase transition-colors duration-200 tracking-body";
   
   const variants = {
@@ -9,8 +9,10 @@ export default function Button({ variant = 'primary', children, onClick, icon, c
     chat: "bg-pure-white text-obsidian-canvas text-[13px] rounded-pills px-5 py-2.5 hover:bg-silver"
   };
 
+  const disabledStyles = disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer";
+
   return (
-    <button onClick={onClick} className={`${baseStyles} ${variants[variant]} ${className}`}>
+    <button onClick={onClick} disabled={disabled} className={`${baseStyles} ${variants[variant]} ${className} ${disabledStyles}`}>
       {icon && <span className="mr-2 flex items-center">{icon}</span>}
       {children}
     </button>
