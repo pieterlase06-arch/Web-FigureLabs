@@ -163,7 +163,7 @@ export default function Landing() {
               Scientific illustration shouldn't be a compromise between aesthetic quality and empirical accuracy. Most generative AI tools produce beautiful but functionally useless graphics—hallucinating axes, distorting scales, and ignoring the rigid constraints of academic publishing.
             </p>
             <p className="font-aeonik font-normal text-[16px] leading-[1.5] text-smoke text-left">
-              FigureLabs is built on a simple premise: a visual must first be true, then it can be beautiful. We constrain the AI using structural parsers and scientific validation, ensuring every figure you generate is ready for peer-review. Dokumen dan metadatanya valid, memuat <strong className="text-frost-text">Nama Penyusun</strong> secara akurat tanpa kecuali.
+              FigureLabs is built on a simple premise: a visual must first be true, then it can be beautiful. We constrain the AI using structural parsers and scientific validation, ensuring every figure you generate is ready for peer-review.
             </p>
           </div>
           

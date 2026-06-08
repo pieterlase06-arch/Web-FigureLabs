@@ -148,6 +148,15 @@ export default function Editor() {
                 ></textarea>
               </div>
 
+              {/* Administrative Metadata */}
+              <div className="flex flex-col gap-2 mb-5 p-3 border border-onyx-edge rounded-md bg-[#1a1a1a]">
+                <label className="font-aeonik font-bold uppercase text-[10px] tracking-widest text-graphite mb-1">Metadata Dokumen</label>
+                <div className="flex flex-col gap-1">
+                  <span className="font-input text-[11px] text-frost-text">Nama Penyusun</span>
+                  <input type="text" className="w-full bg-void border border-onyx-edge rounded px-2 py-1.5 text-smoke font-input text-[11px] focus:outline-none focus:border-silver transition-colors" placeholder="Masukkan nama..." defaultValue="Dr. Pieter Lase" />
+                </div>
+              </div>
+
               {/* Drag & Drop Zone for Multi-Modal Input */}
               <div className="flex flex-col gap-2 mb-5">
                 <div className="w-full border-2 border-dashed border-onyx-edge rounded-md p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-silver hover:bg-elevated transition-colors">
