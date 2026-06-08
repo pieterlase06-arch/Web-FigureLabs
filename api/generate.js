@@ -1,21 +1,33 @@
-import { Buffer } from 'node:buffer';
+export const config = {
+  runtime: 'edge',
+};
 
-export default async function handler(req, res) {
+export default async function handler(req) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
-  const { prompt } = req.body;
-  if (!prompt) {
-    return res.status(400).json({ error: 'Prompt is required' });
-  }
-
-  const apiKey = process.env.VITE_HF_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: 'VITE_HF_API_KEY is not configured in Vercel Environment Variables' });
+    return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   try {
+    const { prompt } = await req.json();
+    
+    if (!prompt) {
+      return new Response(JSON.stringify({ error: 'Prompt is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const apiKey = process.env.VITE_HF_API_KEY;
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: 'VITE_HF_API_KEY is not configured in Vercel Environment Variables' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     const response = await fetch(
       "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
       {
@@ -29,24 +41,29 @@ export default async function handler(req, res) {
     );
 
     if (!response.ok) {
-      let errorData = "Gagal menghubungkan ke AI.";
+      let errorText = "Gagal menghubungkan ke AI.";
       try {
         const json = await response.json();
-        errorData = json.error || errorData;
+        errorText = json.error || errorText;
       } catch (e) {
-        errorData = await response.text();
+        errorText = await response.text();
       }
-      return res.status(response.status).json({ error: errorData });
+      return new Response(JSON.stringify({ error: "API Error", message: errorText }), {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    
-    res.setHeader('Content-Type', 'image/jpeg');
-    res.status(200).send(buffer);
+    // Stream the image directly back to the client
+    return new Response(response.body, {
+      status: 200,
+      headers: { 'Content-Type': 'image/jpeg' },
+    });
 
   } catch (error) {
-    console.error("Error generating image:", error);
-    res.status(500).json({ error: "Internal Server Error", message: error.message, stack: error.stack });
+    return new Response(JSON.stringify({ error: "Internal Server Error", message: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
