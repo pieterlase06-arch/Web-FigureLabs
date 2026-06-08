@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import InstitutionBanner from '../components/home/InstitutionBanner';
 import Gallery from '../components/home/Gallery';
 
 export default function Landing() {
@@ -82,9 +81,6 @@ export default function Landing() {
             </div>
           </div>
         </section>
-
-        {/* 2. Institution Banner */}
-        <InstitutionBanner />
 
         {/* 3. Feature Grid 2x2 */}
         <section className="w-full max-w-[1200px] px-6 mt-16 mb-[120px]" id="services">
