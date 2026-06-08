@@ -45,7 +45,7 @@ export default function Landing() {
           </h1>
 
           <p className="font-aeonik text-[18px] text-smoke text-center max-w-[600px] mb-12 leading-[1.4]">
-            Export publication-ready SVGs for Nature & Science journals. Strictly adheres to cartographic rules and academic formatting standards.
+            Export publication-ready SVGs for Nature & Science journals. Strictly adheres to scientific accuracy and academic formatting standards.
           </p>
           
           <div className="flex items-center gap-5 mb-24">
@@ -73,7 +73,7 @@ export default function Landing() {
                 <span className="text-frost-text break-all">{typedText}<span className="animate-pulse inline-block w-2 h-3 bg-frost-text align-middle ml-1"></span></span>
               </div>
               <div className="text-graphite opacity-80 border-l-2 border-onyx-edge pl-4 mt-4 space-y-2">
-                 <p>[OK] Validating prompt against cartographic constraints...</p>
+                 <p>[OK] Validating prompt against academic constraints...</p>
                  <p>[OK] Enforcing Wong (2011) color-blind friendly palette...</p>
                  <p>[OK] Setting minimum stroke weight to 0.5pt...</p>
                  <p className="text-[#10B981] pt-2">✓ Lossless Vector SVG generated successfully. (0.84s)</p>
@@ -126,7 +126,7 @@ export default function Landing() {
               </div>
               <h3 className="font-aeonik font-bold uppercase text-[14px] text-frost-text mb-3">Scale Validity</h3>
               <p className="font-aeonik font-normal text-[14px] text-smoke leading-[1.43]">
-                Zero data misrepresentation. Axis rendering, geographic projections, and error bars are generated with absolute scientific rigor.
+                Zero data misrepresentation. Molecular structures, physical dynamics, and biological diagrams are generated with absolute scientific rigor.
               </p>
             </div>
 
@@ -161,7 +161,7 @@ export default function Landing() {
               Scientific illustration shouldn't be a compromise between aesthetic quality and empirical accuracy. Most generative AI tools produce beautiful but functionally useless graphics—hallucinating axes, distorting scales, and ignoring the rigid constraints of academic publishing.
             </p>
             <p className="font-aeonik font-normal text-[16px] leading-[1.5] text-smoke text-left">
-              FigureLabs is built on a simple premise: a visual must first be true, then it can be beautiful. We constrain the AI using structural parsers and cartographic validation, ensuring every figure you generate is ready for peer-review. Dokumen dan metadatanya valid, memuat <strong className="text-frost-text">Nama Penyusun</strong> secara akurat tanpa kecuali.
+              FigureLabs is built on a simple premise: a visual must first be true, then it can be beautiful. We constrain the AI using structural parsers and scientific validation, ensuring every figure you generate is ready for peer-review. Dokumen dan metadatanya valid, memuat <strong className="text-frost-text">Nama Penyusun</strong> secara akurat tanpa kecuali.
             </p>
           </div>
           
