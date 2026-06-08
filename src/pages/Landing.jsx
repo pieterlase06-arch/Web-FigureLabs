@@ -1,45 +1,88 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 
 export default function Landing() {
+  const [typedText, setTypedText] = useState('');
+  const promptText = "> Generating spatial distribution of NDVI indices with EPSG:4326 projection...";
+  
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      setTypedText(promptText.slice(0, i));
+      i++;
+      if (i > promptText.length) clearInterval(interval);
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-obsidian-canvas text-frost-text flex flex-col items-center">
-      <Header />
+    <div className="min-h-screen bg-obsidian-canvas text-frost-text flex flex-col items-center relative overflow-x-hidden">
       
-      <main className="w-full flex flex-col items-center">
+      {/* Decorative Dot Matrix Map - Moved to absolute background */}
+      <div className="absolute top-[200px] left-0 w-full h-[800px] overflow-hidden flex justify-center items-center opacity-20 select-none pointer-events-none z-0">
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'radial-gradient(circle at center, #ffffff 1.5px, transparent 1.5px)',
+          backgroundSize: '24px 24px',
+          maskImage: 'radial-gradient(ellipse at top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%)'
+        }}></div>
+      </div>
+
+      <div className="z-10 w-full flex justify-center">
+        <Header />
+      </div>
+      
+      <main className="w-full flex flex-col items-center z-10">
         {/* 1. Hero Section */}
-        <section className="w-full max-w-[1200px] flex flex-col items-center pt-24 pb-16 px-6 relative z-10">
-          <Badge variant="default" className="mb-8">2/5 SPOTS LEFT FOR APRIL</Badge>
+        <section className="w-full max-w-[1200px] flex flex-col items-center pt-24 pb-16 px-6">
+          <Badge variant="accent" className="mb-8">ACADEMIC PUBLISHING READY</Badge>
           
-          <h1 className="text-display tracking-display font-aeonik font-normal leading-none text-center max-w-[900px] mb-12">
+          <h1 className="text-display tracking-display font-aeonik font-normal leading-none text-center max-w-[900px] mb-8">
             Scientific precision,<br />visual excellence.
           </h1>
+
+          <p className="font-aeonik text-[18px] text-smoke text-center max-w-[600px] mb-12 leading-[1.4]">
+            Export publication-ready SVGs for Nature & Science journals. Strictly adheres to cartographic rules and academic formatting standards.
+          </p>
           
-          <div className="flex items-center gap-5">
-            <Button variant="primary" onClick={() => window.location.hash = '#editor'}>Start Now</Button>
+          <div className="flex items-center gap-5 mb-24">
+            <Button variant="primary" onClick={() => window.location.hash = '#editor'}>Open Workspace</Button>
             <Button variant="outlined" icon={
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             }>Read Manifesto</Button>
           </div>
-        </section>
 
-        {/* 2. Decorative Dot Matrix Map */}
-        <section className="w-full h-[400px] relative overflow-hidden flex justify-center items-center opacity-40 select-none pointer-events-none mb-[120px]">
-          {/* Simple dot matrix representation using CSS radial-gradient */}
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'radial-gradient(circle at center, #ffffff 1.5px, transparent 1.5px)',
-            backgroundSize: '20px 20px',
-            maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)'
-          }}></div>
+          {/* Editor/Prompt Mockup Preview */}
+          <div className="w-full max-w-[800px] border border-onyx-edge bg-surface rounded-md overflow-hidden flex flex-col shadow-none">
+            {/* Mock Header */}
+            <div className="h-10 border-b border-onyx-edge flex items-center px-4 gap-2 bg-obsidian-canvas shrink-0">
+               <div className="w-2.5 h-2.5 rounded-full border border-ash bg-obsidian-canvas"></div>
+               <div className="w-2.5 h-2.5 rounded-full border border-ash bg-obsidian-canvas"></div>
+               <div className="w-2.5 h-2.5 rounded-full border border-ash bg-obsidian-canvas"></div>
+               <span className="ml-4 font-input text-[11px] text-graphite tracking-caption">figure-engine — rendering terminal</span>
+            </div>
+            {/* Mock Body */}
+            <div className="p-6 font-input text-[13px] text-smoke text-left leading-[1.6]">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-amber-whisper">sys@figurelabs:~$</span>
+                <span className="text-frost-text break-all">{typedText}<span className="animate-pulse inline-block w-2 h-3 bg-frost-text align-middle ml-1"></span></span>
+              </div>
+              <div className="text-graphite opacity-80 border-l-2 border-onyx-edge pl-4 mt-4 space-y-2">
+                 <p>[OK] Validating prompt against cartographic constraints...</p>
+                 <p>[OK] Enforcing Wong (2011) color-blind friendly palette...</p>
+                 <p>[OK] Setting minimum stroke weight to 0.5pt...</p>
+                 <p className="text-[#10B981] pt-2">✓ Lossless Vector SVG generated successfully. (0.84s)</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* 3. Feature Grid 2x2 */}
-        <section className="w-full max-w-[1200px] px-6 mb-[120px]" id="services">
+        <section className="w-full max-w-[1200px] px-6 mt-16 mb-[120px]" id="services">
           <div className="grid grid-cols-1 md:grid-cols-2 bg-onyx-edge gap-px border border-onyx-edge">
             {/* Cell 1 */}
             <div className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300">
