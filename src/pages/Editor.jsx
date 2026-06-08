@@ -309,7 +309,7 @@ export default function Editor() {
                         <div 
                             key={label.id}
                             className={`absolute z-30 flex items-center gap-1 ${currentTool === 'pan' ? 'cursor-move' : ''}`}
-                            style={{ left: label.x, top: label.y, transform: 'translate(-50%, -50%)' }}
+                            style={{ left: label.x, top: label.y }}
                             onClick={() => setSelectedTextId(label.id)}
                         >
                             {/* Drag Handle - ignore during export */}
