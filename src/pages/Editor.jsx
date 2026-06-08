@@ -15,7 +15,7 @@ export default function Editor() {
           <span className="font-input text-[13px] tracking-caption text-smoke">SCIENTIFIC WORKSPACE</span>
         </div>
         <div className="flex items-center gap-4">
-           <span className="font-input text-[11px] text-graphite hidden md:block">CRS: EPSG:4326 | Scale 1:100,000</span>
+           <span className="font-input text-[11px] text-graphite hidden md:block">Color Space: CMYK | DPI: 300</span>
            <Badge variant="default">ENGINE READY</Badge>
         </div>
       </header>
@@ -24,7 +24,7 @@ export default function Editor() {
         
         {/* Left Toolbar */}
         <aside className="w-[60px] border-r border-onyx-edge flex flex-col items-center py-4 gap-4 shrink-0 bg-surface z-20">
-          <button className="w-10 h-10 rounded-md hover:bg-elevated flex items-center justify-center text-frost-text transition-colors group relative" title="Spatial Compass">
+          <button className="w-10 h-10 rounded-md hover:bg-elevated flex items-center justify-center text-frost-text transition-colors group relative" title="Pan Tool">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
@@ -103,10 +103,10 @@ export default function Editor() {
                 
                 {/* The Actual Canvas Element */}
                 <div className={`w-full max-w-[800px] aspect-[4/3] ${bgGreen ? 'bg-[#00FF00]' : 'bg-obsidian-canvas'} border border-onyx-edge flex items-center justify-center relative transition-colors duration-200 shadow-none z-10`}>
-                  {/* Geographic Scale Bar Overlay */}
-                  <div className="absolute bottom-6 left-6 border-b-2 border-l-2 border-r-2 border-frost-text w-[100px] h-2 flex justify-between items-end text-[10px] font-input text-frost-text pb-1">
+                  {/* Scale Bar Overlay */}
+                  <div className="absolute bottom-6 left-6 border-b-2 border-l-2 border-r-2 border-frost-text w-[50px] h-2 flex justify-between items-end text-[10px] font-input text-frost-text pb-1">
                     <span className="translate-y-4">0</span>
-                    <span className="translate-y-4">100 km</span>
+                    <span className="translate-y-4">10 μm</span>
                   </div>
 
                   <span className={`font-input tracking-caption text-[13px] ${bgGreen ? 'text-black' : 'text-smoke'}`}>
@@ -121,7 +121,7 @@ export default function Editor() {
           {/* Bottom Scientific Metadata Bar */}
           <div className="h-[30px] border-t border-onyx-edge bg-obsidian-canvas flex items-center px-4 shrink-0 font-input text-[11px] text-graphite tracking-caption justify-between">
             <div className="flex gap-4">
-              <span>Projection: WGS 84</span>
+              <span>Color Profile: sRGB</span>
               <span>Min Line Weight: 0.5pt</span>
               <span>Font: Aeonik (Embedded)</span>
             </div>
@@ -142,7 +142,7 @@ export default function Editor() {
               <div className="flex flex-col gap-2 mb-5">
                 <textarea 
                   className="w-full h-32 bg-obsidian-canvas border border-onyx-edge rounded-md p-3 text-frost-text font-input text-[13px] leading-[1.5] resize-none focus:outline-none focus:border-silver transition-colors"
-                  placeholder="> Enter model prompt... (e.g. Render spatial distribution of NDVI across three seasons)"
+                  placeholder="> Enter model prompt... (e.g. Render 3D cross-section of a plant cell with labeled organelles)"
                 ></textarea>
               </div>
 
@@ -188,7 +188,7 @@ export default function Editor() {
                  </div>
                  <div className="flex items-center gap-2 p-2 hover:bg-elevated rounded transition-colors cursor-pointer pl-6">
                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-                   <span>Geospatial Features</span>
+                   <span>Illustration Data</span>
                  </div>
                  <div className="flex items-center gap-2 p-2 hover:bg-elevated rounded transition-colors cursor-pointer pl-6">
                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>

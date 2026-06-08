@@ -6,7 +6,7 @@ import Gallery from '../components/home/Gallery';
 
 export default function Landing() {
   const [typedText, setTypedText] = useState('');
-  const promptText = "> Generating spatial distribution of NDVI indices with EPSG:4326 projection...";
+  const promptText = "> Generating 3D cross-section of an animal cell with labeled organelles...";
   
   useEffect(() => {
     let i = 0;
