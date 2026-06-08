@@ -308,14 +308,17 @@ export default function Editor() {
                     {textLabels.map(label => (
                         <div 
                             key={label.id}
-                            className={`absolute z-30 flex items-center gap-1 ${currentTool === 'pan' ? 'cursor-move' : ''}`}
+                            className={`absolute z-30 flex items-start gap-1 ${currentTool === 'pan' ? 'cursor-move' : ''}`}
                             style={{ left: label.x, top: label.y }}
-                            onClick={() => setSelectedTextId(label.id)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedTextId(label.id);
+                            }}
                         >
                             {/* Drag Handle - ignore during export */}
                             {currentTool === 'pan' && selectedTextId === label.id && (
                                 <div 
-                                    className="ignore-export w-6 h-6 bg-surface border border-onyx-edge rounded flex items-center justify-center cursor-move text-smoke hover:text-white shadow-md absolute -left-8"
+                                    className="ignore-export w-6 h-6 bg-surface border border-onyx-edge rounded flex items-center justify-center cursor-move text-smoke hover:text-white shadow-md absolute -left-8 top-1/2 -translate-y-1/2"
                                     onMouseDown={(e) => { e.preventDefault(); handleTextMouseDown(e, label.id, label.x, label.y); }}
                                     title="Tahan dan geser (Drag)"
                                 >
@@ -323,14 +326,24 @@ export default function Editor() {
                                 </div>
                             )}
                             
-                            <input 
-                                type="text"
-                                value={label.text}
-                                onChange={(e) => updateText(label.id, { text: e.target.value })}
-                                className={`relative z-20 bg-transparent text-center font-input font-bold outline-none px-2 py-1 rounded drop-shadow-md placeholder-gray-500 min-w-[50px] transition-all border ${selectedTextId === label.id && currentTool === 'pan' ? 'border-amber-whisper bg-[#ffffff20]' : 'border-transparent'}`}
-                                style={{ color: label.color, fontSize: `${label.fontSize}px` }}
-                                placeholder="Teks..."
-                            />
+                            {selectedTextId === label.id && currentTool === 'pan' ? (
+                                <input 
+                                    type="text"
+                                    autoFocus
+                                    value={label.text}
+                                    onChange={(e) => updateText(label.id, { text: e.target.value })}
+                                    className="relative z-20 bg-transparent text-left font-input font-bold outline-none px-1 py-0 rounded drop-shadow-md min-w-[20px] transition-all border border-amber-whisper bg-[#ffffff20]"
+                                    style={{ color: label.color, fontSize: `${label.fontSize}px`, lineHeight: 1.2 }}
+                                    placeholder="Teks..."
+                                />
+                            ) : (
+                                <div 
+                                    className="relative z-20 bg-transparent text-left font-input font-bold outline-none px-1 py-0 rounded drop-shadow-md whitespace-pre border border-transparent"
+                                    style={{ color: label.color, fontSize: `${label.fontSize}px`, lineHeight: 1.2 }}
+                                >
+                                    {label.text || "Teks..."}
+                                </div>
+                            )}
                             
                             {/* Delete Button - ignore during export */}
                             {currentTool === 'pan' && selectedTextId === label.id && (
