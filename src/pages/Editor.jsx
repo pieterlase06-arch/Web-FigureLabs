@@ -151,11 +151,6 @@ export default function Editor() {
                 
                 {/* The Actual Canvas Element */}
                 <div className={`w-full max-w-[800px] aspect-[4/3] ${bgGreen ? 'bg-[#00FF00]' : 'bg-obsidian-canvas'} border border-onyx-edge flex items-center justify-center relative transition-colors duration-200 shadow-none z-10 overflow-hidden`}>
-                  {/* Scale Bar Overlay */}
-                  <div className="absolute bottom-6 left-6 border-b-2 border-l-2 border-r-2 border-frost-text w-[50px] h-2 flex justify-between items-end text-[10px] font-input text-frost-text pb-1 z-20 mix-blend-difference drop-shadow-md">
-                    <span className="translate-y-4">0</span>
-                    <span className="translate-y-4">10 μm</span>
-                  </div>
 
                   {generatedImage ? (
                     <img src={generatedImage} alt="Generated Figure" className="w-full h-full object-contain relative z-10" />
@@ -221,16 +216,6 @@ export default function Editor() {
                   <input type="text" className="w-full bg-void border border-onyx-edge rounded px-2 py-1.5 text-smoke font-input text-[11px] focus:outline-none focus:border-silver transition-colors" placeholder="Masukkan nama..." defaultValue="Dr. Pieter Lase" />
                 </div>
               </div>
-
-              {/* Drag & Drop Zone for Multi-Modal Input */}
-              <div className="flex flex-col gap-2 mb-5">
-                <div className="w-full border-2 border-dashed border-onyx-edge rounded-md p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-silver hover:bg-elevated transition-colors">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-smoke mb-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                  <span className="font-input text-[11px] text-smoke leading-[1.4]">
-                    Drag & drop Reference Image<br/>or Sketch (.png, .pdf)
-                  </span>
-                </div>
-              </div>
               
               <div className="flex flex-col gap-2 mb-5">
                 <div className="p-3 bg-[#1a1a1a] border border-onyx-edge rounded-md flex items-start gap-3">
@@ -281,10 +266,6 @@ export default function Editor() {
             <Button variant="outlined" className="w-full py-2.5 justify-center font-input text-[11px]" disabled={!generatedImage} onClick={handleDownload}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               Export Lossless PNG
-            </Button>
-            <Button variant="outlined" className="w-full py-2.5 justify-center font-input text-[11px]" disabled={!generatedImage}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Export as Editable PPTX
             </Button>
           </div>
         </aside>
