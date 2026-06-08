@@ -17,17 +17,11 @@ export default function Editor() {
     setErrorMsg(null);
     
     try {
-      const response = await fetch(
-        "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0",
-        {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_HF_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({ inputs: prompt }),
-        }
-      );
+      const response = await fetch("/api/generate", {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: JSON.stringify({ prompt: prompt }),
+      });
       
       if (!response.ok) {
         let errStr = "Gagal menghubungkan ke AI. Coba periksa koneksi atau API Key Anda.";
