@@ -6,6 +6,52 @@ import Badge from '../components/ui/Badge';
 export default function Editor() {
   const navigate = useNavigate();
   const [bgGreen, setBgGreen] = useState(false);
+  const [prompt, setPrompt] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const handleGenerate = async () => {
+    if (!prompt.trim()) return;
+    setIsGenerating(true);
+    setErrorMsg(null);
+    
+    try {
+      const response = await fetch(
+        "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
+        {
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_HF_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({ inputs: prompt }),
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error("Gagal menghubungkan ke AI. Coba periksa koneksi atau API Key Anda.");
+      }
+      
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      setGeneratedImage(imageUrl);
+    } catch (err) {
+      setErrorMsg(err.message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!generatedImage) return;
+    const a = document.createElement('a');
+    a.href = generatedImage;
+    a.download = 'figurelabs-export.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   return (
     <div className="h-screen w-full flex flex-col bg-obsidian-canvas text-frost-text overflow-hidden">
@@ -104,17 +150,33 @@ export default function Editor() {
              }}>
                 
                 {/* The Actual Canvas Element */}
-                <div className={`w-full max-w-[800px] aspect-[4/3] ${bgGreen ? 'bg-[#00FF00]' : 'bg-obsidian-canvas'} border border-onyx-edge flex items-center justify-center relative transition-colors duration-200 shadow-none z-10`}>
+                <div className={`w-full max-w-[800px] aspect-[4/3] ${bgGreen ? 'bg-[#00FF00]' : 'bg-obsidian-canvas'} border border-onyx-edge flex items-center justify-center relative transition-colors duration-200 shadow-none z-10 overflow-hidden`}>
                   {/* Scale Bar Overlay */}
-                  <div className="absolute bottom-6 left-6 border-b-2 border-l-2 border-r-2 border-frost-text w-[50px] h-2 flex justify-between items-end text-[10px] font-input text-frost-text pb-1">
+                  <div className="absolute bottom-6 left-6 border-b-2 border-l-2 border-r-2 border-frost-text w-[50px] h-2 flex justify-between items-end text-[10px] font-input text-frost-text pb-1 z-20 mix-blend-difference drop-shadow-md">
                     <span className="translate-y-4">0</span>
                     <span className="translate-y-4">10 μm</span>
                   </div>
 
-                  <span className={`font-input tracking-caption text-[13px] ${bgGreen ? 'text-black' : 'text-smoke'}`}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-2 opacity-50"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                    [ HTML5 RENDER TARGET ]
-                  </span>
+                  {generatedImage ? (
+                    <img src={generatedImage} alt="Generated Figure" className="w-full h-full object-contain relative z-10" />
+                  ) : (
+                    <span className={`font-input tracking-caption text-[13px] relative z-10 ${bgGreen ? 'text-black' : 'text-smoke'}`}>
+                      {isGenerating ? (
+                        <div className="flex flex-col items-center animate-pulse">
+                          <svg className="animate-spin mb-3 h-6 w-6 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          [ COMPILING MODEL... ]
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-2 opacity-50"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                          [ HTML5 RENDER TARGET ]
+                        </div>
+                      )}
+                    </span>
+                  )}
                 </div>
 
              </div>
@@ -145,6 +207,9 @@ export default function Editor() {
                 <textarea 
                   className="w-full h-32 bg-obsidian-canvas border border-onyx-edge rounded-md p-3 text-frost-text font-input text-[13px] leading-[1.5] resize-none focus:outline-none focus:border-silver transition-colors"
                   placeholder="> Enter model prompt... (e.g. Render 3D cross-section of a plant cell with labeled organelles)"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  disabled={isGenerating}
                 ></textarea>
               </div>
 
@@ -182,7 +247,10 @@ export default function Editor() {
                 </div>
               </div>
 
-              <Button variant="primary" className="w-full py-2.5 justify-center">Compile Figure</Button>
+              <Button variant="primary" className="w-full py-2.5 justify-center" onClick={handleGenerate} disabled={isGenerating || !prompt.trim()}>
+                {isGenerating ? "Compiling..." : "Compile Figure"}
+              </Button>
+              {errorMsg && <p className="text-[#ff4444] font-input text-[11px] mt-2 leading-[1.4] text-center">{errorMsg}</p>}
             </div>
 
             {/* Structure / Layers Panel Mock */}
@@ -210,13 +278,13 @@ export default function Editor() {
           </div>
 
           <div className="p-5 border-t border-onyx-edge shrink-0 flex flex-col gap-3">
-            <Button variant="outlined" className="w-full py-2.5 justify-center font-input text-[11px]">
+            <Button variant="outlined" className="w-full py-2.5 justify-center font-input text-[11px]" disabled={!generatedImage} onClick={handleDownload}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export Lossless PNG
+            </Button>
+            <Button variant="outlined" className="w-full py-2.5 justify-center font-input text-[11px]" disabled={!generatedImage}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               Export as Editable PPTX
-            </Button>
-            <Button variant="outlined" className="w-full py-2.5 justify-center font-input text-[11px]">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Export Lossless SVG
             </Button>
           </div>
         </aside>
