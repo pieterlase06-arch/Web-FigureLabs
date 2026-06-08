@@ -313,24 +313,31 @@ export default function Editor() {
                     {textLabels.map(label => (
                         <div 
                             key={label.id}
-                            className={`absolute z-30 group ${currentTool === 'pan' ? 'cursor-move' : ''}`}
+                            className={`absolute z-30 group flex items-center gap-1 ${currentTool === 'pan' ? 'cursor-move' : ''}`}
                             style={{ left: label.x, top: label.y, transform: 'translate(-50%, -50%)' }}
                         >
-                            <div 
-                                className="absolute inset-0 z-10" 
-                                onMouseDown={(e) => handleTextMouseDown(e, label.id, label.x, label.y)}
-                            />
+                            {currentTool === 'pan' && (
+                                <div 
+                                    className="w-6 h-6 bg-surface border border-onyx-edge rounded flex items-center justify-center cursor-move text-smoke hover:text-white shadow-md"
+                                    onMouseDown={(e) => { e.preventDefault(); handleTextMouseDown(e, label.id, label.x, label.y); }}
+                                    title="Tahan dan geser (Drag)"
+                                >
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 9h14M5 15h14"/></svg>
+                                </div>
+                            )}
+                            
                             <input 
                                 type="text"
                                 value={label.text}
                                 onChange={(e) => updateText(label.id, e.target.value)}
-                                className="relative z-20 bg-transparent border border-transparent focus:border-amber-whisper focus:bg-[#11111180] text-center font-input font-bold outline-none px-2 py-1 text-[18px] md:text-[22px] rounded"
-                                style={{ color: bgGreen ? '#000' : '#fff' }}
+                                className="relative z-20 bg-transparent border border-transparent hover:border-silver focus:border-amber-whisper focus:bg-[#ffffffcc] text-center font-input font-bold outline-none px-2 py-1 text-[18px] md:text-[22px] rounded text-black drop-shadow-md placeholder-gray-500 min-w-[120px]"
+                                placeholder="Ketik label..."
                             />
+                            
                             {currentTool === 'pan' && (
                                 <button 
                                     onClick={() => deleteText(label.id)}
-                                    className="absolute -top-3 -right-3 z-30 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs cursor-pointer"
+                                    className="z-30 bg-red-500 text-white w-6 h-6 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs cursor-pointer shadow-md"
                                     title="Hapus Label"
                                 >
                                     ✕
