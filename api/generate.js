@@ -18,9 +18,9 @@ export default async function handler(req, res) {
   const data = JSON.stringify({ inputs: prompt });
 
   const options = {
-    hostname: 'api-inference.huggingface.co',
+    hostname: 'router.huggingface.co',
     port: 443,
-    path: '/models/stabilityai/stable-diffusion-xl-base-1.0',
+    path: '/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0',
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
