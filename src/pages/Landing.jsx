@@ -86,7 +86,7 @@ export default function Landing() {
         <section className="w-full max-w-[1200px] px-6 mt-16 mb-[120px]" id="services">
           <div className="grid grid-cols-1 md:grid-cols-2 bg-onyx-edge gap-px border border-onyx-edge">
             {/* Cell 1 */}
-            <div className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300">
+            <div onClick={() => window.location.hash = '#editor'} className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300 cursor-pointer group">
               <div className="mb-6">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f3f3f3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -99,7 +99,7 @@ export default function Landing() {
             </div>
             
             {/* Cell 2 */}
-            <div className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300">
+            <div onClick={() => window.location.hash = '#editor'} className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300 cursor-pointer group">
               <div className="mb-6">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f3f3f3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -116,7 +116,7 @@ export default function Landing() {
             </div>
 
             {/* Cell 3 */}
-            <div className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300">
+            <div onClick={() => window.location.hash = '#editor'} className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300 cursor-pointer group">
               <div className="mb-6">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f3f3f3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -131,7 +131,7 @@ export default function Landing() {
             </div>
 
             {/* Cell 4 */}
-            <div className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300">
+            <div onClick={() => window.location.hash = '#editor'} className="bg-obsidian-canvas p-[40px] flex flex-col h-full hover:bg-surface transition-colors duration-300 cursor-pointer group">
               <div className="mb-6">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f3f3f3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
