@@ -1,3 +1,5 @@
+import { Buffer } from 'node:buffer';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -45,6 +47,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Error generating image:", error);
-    res.status(500).json({ error: "Internal Server Error", message: error.message });
+    res.status(500).json({ error: "Internal Server Error", message: error.message, stack: error.stack });
   }
 }

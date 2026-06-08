@@ -39,7 +39,11 @@ export default function Editor() {
         let errStr = "Gagal menghubungkan ke AI. Coba periksa koneksi atau API Key Anda.";
         try {
           const errData = await response.json();
-          errStr = errData.error || errStr;
+          if (errData.message) {
+            errStr = `${errData.error} - ${errData.message}`;
+          } else {
+            errStr = errData.error || errStr;
+          }
         } catch (e) {
           // ignore
         }
