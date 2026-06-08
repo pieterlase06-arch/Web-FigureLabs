@@ -12,9 +12,10 @@ export default function Editor() {
   const [generatedImage, setGeneratedImage] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  // New states for tools
+  // Tools state
   const [currentTool, setCurrentTool] = useState('pan'); // 'pan', 'eraser', 'text'
   const [textLabels, setTextLabels] = useState([]);
+  const [selectedTextId, setSelectedTextId] = useState(null);
   
   // Refs
   const exportContainerRef = useRef(null);
@@ -22,10 +23,8 @@ export default function Editor() {
   const isDrawing = useRef(false);
   const dragInfo = useRef({ isDragging: false, id: null, startX: 0, startY: 0, initialX: 0, initialY: 0 });
 
-  // Handle Resize for Canvas (Match image container size)
   useEffect(() => {
     if (generatedImage && eraserCanvasRef.current && exportContainerRef.current) {
-        // We set the canvas internal resolution to match the container's client size
         const { clientWidth, clientHeight } = exportContainerRef.current;
         if (eraserCanvasRef.current.width !== clientWidth) {
            eraserCanvasRef.current.width = clientWidth;
@@ -36,6 +35,7 @@ export default function Editor() {
 
   const clearOverlays = () => {
     setTextLabels([]);
+    setSelectedTextId(null);
     if (eraserCanvasRef.current) {
       const ctx = eraserCanvasRef.current.getContext('2d');
       ctx.clearRect(0, 0, eraserCanvasRef.current.width, eraserCanvasRef.current.height);
@@ -56,14 +56,10 @@ export default function Editor() {
       });
       
       if (!response.ok) {
-        let errStr = "Gagal menghubungkan ke AI. Coba periksa koneksi atau API Key Anda.";
+        let errStr = "Gagal menghubungkan ke AI.";
         try {
           const errData = await response.json();
-          if (errData.message) {
-            errStr = `${errData.error} - ${errData.message}`;
-          } else {
-            errStr = errData.error || errStr;
-          }
+          errStr = errData.message ? `${errData.error} - ${errData.message}` : errData.error || errStr;
         } catch (e) {}
         throw new Error(errStr);
       }
@@ -72,11 +68,7 @@ export default function Editor() {
       const imageUrl = URL.createObjectURL(blob);
       setGeneratedImage(imageUrl);
     } catch (err) {
-      if (err.message === "Failed to fetch") {
-        setErrorMsg("Koneksi gagal (Failed to fetch). Pastikan Anda sudah me-Redeploy Vercel setelah memasukkan API Key, dan matikan sementara Adblocker/Shields di browser Anda.");
-      } else {
-        setErrorMsg(err.message);
-      }
+      setErrorMsg(err.message === "Failed to fetch" ? "Koneksi gagal. Matikan Adblocker." : err.message);
     } finally {
       setIsGenerating(false);
     }
@@ -85,19 +77,19 @@ export default function Editor() {
   const handleDownload = async () => {
     if (!generatedImage || !exportContainerRef.current) return;
     
-    // We momentarily deselect tools to hide UI outlines if any
     const previousTool = currentTool;
     setCurrentTool('pan');
+    setSelectedTextId(null); // Deselect to hide outlines
 
     try {
-      // Delay slightly to ensure UI updates (hiding delete buttons) before capturing
-      await new Promise(res => setTimeout(res, 100));
+      await new Promise(res => setTimeout(res, 100)); // wait for React render
       
       const canvas = await html2canvas(exportContainerRef.current, {
         backgroundColor: bgGreen ? '#00FF00' : '#111111',
-        scale: 2, // High resolution export
+        scale: 2,
         useCORS: true,
-        logging: false
+        logging: false,
+        ignoreElements: (element) => element.classList.contains('ignore-export')
       });
       const dataUrl = canvas.toDataURL('image/png');
       const a = document.createElement('a');
@@ -108,6 +100,7 @@ export default function Editor() {
       document.body.removeChild(a);
     } catch (err) {
       console.error("Export failed", err);
+      alert("Gagal melakukan export gambar. Cobalah muat ulang halaman.");
     } finally {
       setCurrentTool(previousTool);
     }
@@ -124,7 +117,6 @@ export default function Editor() {
         
         ctx.beginPath();
         ctx.moveTo(x, y);
-        // Eraser uses the background color to paint over
         ctx.strokeStyle = bgGreen ? '#00FF00' : '#111111'; 
         ctx.lineWidth = 24;
         ctx.lineCap = 'round';
@@ -144,37 +136,42 @@ export default function Editor() {
   };
 
   const handleCanvasMouseUp = () => {
-    if (currentTool === 'eraser') {
-        isDrawing.current = false;
-    }
+    if (currentTool === 'eraser') isDrawing.current = false;
   };
 
   // --- TEXT TOOL LOGIC ---
   const handleContainerClick = (e) => {
-    // Only add text if clicking directly on the container/canvas, not on existing text labels
+    // Deselect if clicking on empty canvas
+    if (e.target === eraserCanvasRef.current || e.target === exportContainerRef.current) {
+        setSelectedTextId(null);
+    }
+
     if (currentTool === 'text' && generatedImage && (e.target === eraserCanvasRef.current || e.target === exportContainerRef.current)) {
         const rect = exportContainerRef.current.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
         const newId = Date.now().toString();
-        setTextLabels(prev => [...prev, { id: newId, text: "Ketik di sini", x, y }]);
-        setCurrentTool('pan'); // Switch back to pan after creating to allow editing
+        setTextLabels(prev => [...prev, { id: newId, text: "Label", x, y, color: '#000000', fontSize: 24 }]);
+        setSelectedTextId(newId);
+        setCurrentTool('pan'); 
     }
   };
 
-  const updateText = (id, newText) => {
-    setTextLabels(prev => prev.map(lbl => lbl.id === id ? { ...lbl, text: newText } : lbl));
+  const updateText = (id, updates) => {
+    setTextLabels(prev => prev.map(lbl => lbl.id === id ? { ...lbl, ...updates } : lbl));
   };
 
   const deleteText = (id) => {
     setTextLabels(prev => prev.filter(lbl => lbl.id !== id));
+    if (selectedTextId === id) setSelectedTextId(null);
   };
 
   // --- DRAG LOGIC FOR TEXT ---
   const handleTextMouseDown = (e, id, currentX, currentY) => {
-    if (currentTool === 'eraser' || currentTool === 'text') return; // Only drag when in pan mode
+    if (currentTool === 'eraser' || currentTool === 'text') return;
     
+    setSelectedTextId(id);
     dragInfo.current = {
         isDragging: true,
         id,
@@ -194,10 +191,7 @@ export default function Editor() {
         const dy = e.clientY - dragInfo.current.startY;
         const newX = dragInfo.current.initialX + dx;
         const newY = dragInfo.current.initialY + dy;
-        
-        setTextLabels(prev => prev.map(lbl => 
-            lbl.id === dragInfo.current.id ? { ...lbl, x: newX, y: newY } : lbl
-        ));
+        updateText(dragInfo.current.id, { x: newX, y: newY });
     }
   };
 
@@ -213,6 +207,8 @@ export default function Editor() {
         document.removeEventListener('mouseup', handleGlobalMouseUp);
     };
   }, []);
+
+  const activeLabel = textLabels.find(l => l.id === selectedTextId);
 
   return (
     <div className="h-screen w-full flex flex-col bg-obsidian-canvas text-frost-text overflow-hidden">
@@ -236,7 +232,7 @@ export default function Editor() {
           <button 
             onClick={() => setCurrentTool('pan')}
             className={`w-10 h-10 rounded-md flex items-center justify-center transition-colors group relative ${currentTool === 'pan' ? 'bg-[#2a2a2a] text-amber-whisper' : 'hover:bg-elevated text-frost-text'}`} 
-            title="Pan Tool / Select (Geser & Edit Teks)"
+            title="Select & Move Tool"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
@@ -247,7 +243,7 @@ export default function Editor() {
           <button 
             onClick={() => setCurrentTool('eraser')}
             className={`w-10 h-10 rounded-md flex items-center justify-center transition-colors ${currentTool === 'eraser' ? 'bg-[#2a2a2a] text-amber-whisper' : 'hover:bg-elevated text-frost-text'}`} 
-            title="Eraser (Hapus teks AI yang berantakan)"
+            title="Eraser Mask"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 20H7L3 16C2.5 15.5 2.5 14.5 3 14L13 4C13.5 3.5 14.5 3.5 15 4L20 9C20.5 9.5 20.5 10.5 20 11L11 20H20Z"></path>
@@ -257,7 +253,7 @@ export default function Editor() {
           <button 
             onClick={() => setCurrentTool('text')}
             className={`w-10 h-10 rounded-md flex items-center justify-center transition-colors ${currentTool === 'text' ? 'bg-[#2a2a2a] text-amber-whisper' : 'hover:bg-elevated text-frost-text'}`} 
-            title="Text Tool (Klik di kanvas untuk tambah teks)"
+            title="Text Tool"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M17 6.1H3"></path>
@@ -296,8 +292,7 @@ export default function Editor() {
 
                 {generatedImage ? (
                   <>
-                    {/* The Base AI Image */}
-                    <img src={generatedImage} alt="Generated Figure" className="w-full h-full object-contain absolute inset-0 z-10 pointer-events-none" crossOrigin="anonymous" />
+                    <img src={generatedImage} alt="Generated Figure" className="w-full h-full object-contain absolute inset-0 z-10 pointer-events-none" />
                     
                     {/* Eraser Canvas Layer */}
                     <canvas 
@@ -313,12 +308,14 @@ export default function Editor() {
                     {textLabels.map(label => (
                         <div 
                             key={label.id}
-                            className={`absolute z-30 group flex items-center gap-1 ${currentTool === 'pan' ? 'cursor-move' : ''}`}
+                            className={`absolute z-30 flex items-center gap-1 ${currentTool === 'pan' ? 'cursor-move' : ''}`}
                             style={{ left: label.x, top: label.y, transform: 'translate(-50%, -50%)' }}
+                            onClick={() => setSelectedTextId(label.id)}
                         >
-                            {currentTool === 'pan' && (
+                            {/* Drag Handle - ignore during export */}
+                            {currentTool === 'pan' && selectedTextId === label.id && (
                                 <div 
-                                    className="w-6 h-6 bg-surface border border-onyx-edge rounded flex items-center justify-center cursor-move text-smoke hover:text-white shadow-md"
+                                    className="ignore-export w-6 h-6 bg-surface border border-onyx-edge rounded flex items-center justify-center cursor-move text-smoke hover:text-white shadow-md absolute -left-8"
                                     onMouseDown={(e) => { e.preventDefault(); handleTextMouseDown(e, label.id, label.x, label.y); }}
                                     title="Tahan dan geser (Drag)"
                                 >
@@ -329,15 +326,17 @@ export default function Editor() {
                             <input 
                                 type="text"
                                 value={label.text}
-                                onChange={(e) => updateText(label.id, e.target.value)}
-                                className="relative z-20 bg-transparent border border-transparent hover:border-silver focus:border-amber-whisper focus:bg-[#ffffffcc] text-center font-input font-bold outline-none px-2 py-1 text-[18px] md:text-[22px] rounded text-black drop-shadow-md placeholder-gray-500 min-w-[120px]"
-                                placeholder="Ketik label..."
+                                onChange={(e) => updateText(label.id, { text: e.target.value })}
+                                className={`relative z-20 bg-transparent text-center font-input font-bold outline-none px-2 py-1 rounded drop-shadow-md placeholder-gray-500 min-w-[50px] transition-all border ${selectedTextId === label.id && currentTool === 'pan' ? 'border-amber-whisper bg-[#ffffff20]' : 'border-transparent'}`}
+                                style={{ color: label.color, fontSize: `${label.fontSize}px` }}
+                                placeholder="Teks..."
                             />
                             
-                            {currentTool === 'pan' && (
+                            {/* Delete Button - ignore during export */}
+                            {currentTool === 'pan' && selectedTextId === label.id && (
                                 <button 
                                     onClick={() => deleteText(label.id)}
-                                    className="z-30 bg-red-500 text-white w-6 h-6 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs cursor-pointer shadow-md"
+                                    className="ignore-export absolute -top-3 -right-3 z-30 bg-red-500 text-white w-6 h-6 rounded flex items-center justify-center text-xs cursor-pointer shadow-md"
                                     title="Hapus Label"
                                 >
                                     ✕
@@ -370,34 +369,62 @@ export default function Editor() {
         <aside className="w-[320px] border-l border-onyx-edge bg-surface flex flex-col shrink-0 z-20">
           
           <div className="flex-1 overflow-y-auto flex flex-col">
-            {/* Generation Panel */}
-            <div className="p-5 border-b border-onyx-edge">
-              <h3 className="font-aeonik font-bold uppercase text-[14px] tracking-body text-frost-text mb-4">AI Instruction</h3>
-              
-              <div className="flex flex-col gap-2 mb-5">
-                <textarea 
-                  className="w-full h-32 bg-obsidian-canvas border border-onyx-edge rounded-md p-3 text-frost-text font-input text-[13px] leading-[1.5] resize-none focus:outline-none focus:border-silver transition-colors"
-                  placeholder="> Enter model prompt... (e.g. Render 3D cross-section of a plant cell with labeled organelles)"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  disabled={isGenerating}
-                ></textarea>
-              </div>
-
-              {/* Administrative Metadata */}
-              <div className="flex flex-col gap-2 mb-5 p-3 border border-onyx-edge rounded-md bg-[#1a1a1a]">
-                <label className="font-aeonik font-bold uppercase text-[10px] tracking-widest text-graphite mb-1">Metadata Dokumen</label>
-                <div className="flex flex-col gap-1">
-                  <span className="font-input text-[11px] text-frost-text">Nama Penyusun</span>
-                  <input type="text" className="w-full bg-void border border-onyx-edge rounded px-2 py-1.5 text-smoke font-input text-[11px] focus:outline-none focus:border-silver transition-colors" placeholder="Masukkan nama..." defaultValue="Dr. Pieter Lase" />
+            
+            {/* Text Settings (Only visible if a text is selected) */}
+            {activeLabel ? (
+              <div className="p-5 border-b border-onyx-edge bg-[#111]">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-aeonik font-bold uppercase text-[14px] tracking-body text-amber-whisper">Pengaturan Teks</h3>
+                  <button onClick={() => setSelectedTextId(null)} className="text-smoke hover:text-white text-xs">✕ Tutup</button>
+                </div>
+                
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between">
+                    <label className="font-input text-[12px] text-smoke">Warna (Color)</label>
+                    <input 
+                      type="color" 
+                      value={activeLabel.color}
+                      onChange={(e) => updateText(activeLabel.id, { color: e.target.value })}
+                      className="w-10 h-8 rounded cursor-pointer bg-transparent border-0"
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <label className="font-input text-[12px] text-smoke">Ukuran (Size)</label>
+                      <span className="font-input text-[12px] text-frost-text bg-void px-2 py-0.5 rounded">{activeLabel.fontSize}px</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="12" 
+                      max="72" 
+                      value={activeLabel.fontSize}
+                      onChange={(e) => updateText(activeLabel.id, { fontSize: parseInt(e.target.value) })}
+                      className="w-full accent-amber-whisper"
+                    />
+                  </div>
                 </div>
               </div>
+            ) : (
+              <div className="p-5 border-b border-onyx-edge">
+                <h3 className="font-aeonik font-bold uppercase text-[14px] tracking-body text-frost-text mb-4">AI Instruction</h3>
+                
+                <div className="flex flex-col gap-2 mb-5">
+                  <textarea 
+                    className="w-full h-32 bg-obsidian-canvas border border-onyx-edge rounded-md p-3 text-frost-text font-input text-[13px] leading-[1.5] resize-none focus:outline-none focus:border-silver transition-colors"
+                    placeholder="> Enter model prompt... (e.g. Render 3D cross-section of a plant cell with labeled organelles)"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    disabled={isGenerating}
+                  ></textarea>
+                </div>
 
-              <Button variant="primary" className="w-full py-2.5 justify-center" onClick={handleGenerate} disabled={isGenerating || !prompt.trim()}>
-                {isGenerating ? "Compiling..." : "Compile Figure"}
-              </Button>
-              {errorMsg && <p className="text-[#ff4444] font-input text-[11px] mt-2 leading-[1.4] text-center">{errorMsg}</p>}
-            </div>
+                <Button variant="primary" className="w-full py-2.5 justify-center" onClick={handleGenerate} disabled={isGenerating || !prompt.trim()}>
+                  {isGenerating ? "Compiling..." : "Compile Figure"}
+                </Button>
+                {errorMsg && <p className="text-[#ff4444] font-input text-[11px] mt-2 leading-[1.4] text-center">{errorMsg}</p>}
+              </div>
+            )}
 
             {/* Structure / Layers Panel Mock */}
             <div className="p-5 flex-1">
