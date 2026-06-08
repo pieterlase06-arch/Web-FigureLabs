@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import InstitutionBanner from '../components/home/InstitutionBanner';
+import Gallery from '../components/home/Gallery';
 
 export default function Landing() {
   const [typedText, setTypedText] = useState('');
@@ -81,6 +83,9 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* 2. Institution Banner */}
+        <InstitutionBanner />
+
         {/* 3. Feature Grid 2x2 */}
         <section className="w-full max-w-[1200px] px-6 mt-16 mb-[120px]" id="services">
           <div className="grid grid-cols-1 md:grid-cols-2 bg-onyx-edge gap-px border border-onyx-edge">
@@ -146,7 +151,10 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* 4. Manifesto Section */}
+        {/* 4. Gallery Section */}
+        <Gallery />
+
+        {/* 5. Manifesto Section */}
         <section className="w-full max-w-[680px] px-6 mb-[120px] flex flex-col items-center text-center" id="process">
           <h2 className="font-aeonik font-normal text-[34px] tracking-heading text-frost-text mb-8">
             Why FigureLabs?

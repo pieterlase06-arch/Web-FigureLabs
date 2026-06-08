@@ -40,6 +40,21 @@ export default function Editor() {
               <path d="M20 20H7L3 16C2.5 15.5 2.5 14.5 3 14L13 4C13.5 3.5 14.5 3.5 15 4L20 9C20.5 9.5 20.5 10.5 20 11L11 20H20Z"></path>
             </svg>
           </button>
+          {/* Text Edit */}
+          <button className="w-10 h-10 rounded-md hover:bg-elevated flex items-center justify-center text-frost-text transition-colors" title="Text Edit (Fix labels directly)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 6.1H3"></path>
+              <path d="M21 12.1H3"></path>
+              <path d="M15.1 18H3"></path>
+            </svg>
+          </button>
+          {/* Remove BG */}
+          <button className="w-10 h-10 rounded-md hover:bg-elevated flex items-center justify-center text-frost-text transition-colors" title="Remove Background">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 3h18v18H3zM3 9h18M9 21V9"></path>
+              <line x1="3" y1="3" x2="21" y2="21"></line>
+            </svg>
+          </button>
           <button className="w-10 h-10 rounded-md hover:bg-elevated flex items-center justify-center text-frost-text transition-colors" title="Grid Snapping">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -130,6 +145,16 @@ export default function Editor() {
                   placeholder="> Enter model prompt... (e.g. Render spatial distribution of NDVI across three seasons)"
                 ></textarea>
               </div>
+
+              {/* Drag & Drop Zone for Multi-Modal Input */}
+              <div className="flex flex-col gap-2 mb-5">
+                <div className="w-full border-2 border-dashed border-onyx-edge rounded-md p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-silver hover:bg-elevated transition-colors">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-smoke mb-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span className="font-input text-[11px] text-smoke leading-[1.4]">
+                    Drag & drop Reference Image<br/>or Sketch (.png, .pdf)
+                  </span>
+                </div>
+              </div>
               
               <div className="flex flex-col gap-2 mb-5">
                 <div className="p-3 bg-[#1a1a1a] border border-onyx-edge rounded-md flex items-start gap-3">
@@ -173,8 +198,15 @@ export default function Editor() {
             </div>
           </div>
 
-          <div className="p-5 border-t border-onyx-edge shrink-0">
-            <Button variant="outlined" className="w-full py-2.5 justify-center">Export Lossless SVG</Button>
+          <div className="p-5 border-t border-onyx-edge shrink-0 flex flex-col gap-3">
+            <Button variant="outlined" className="w-full py-2.5 justify-center font-input text-[11px]">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export as Editable PPTX
+            </Button>
+            <Button variant="outlined" className="w-full py-2.5 justify-center font-input text-[11px]">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export Lossless SVG
+            </Button>
           </div>
         </aside>
 
