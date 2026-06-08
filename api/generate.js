@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   const options = {
     hostname: 'router.huggingface.co',
     port: 443,
-    path: '/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0',
+    path: '/hf-inference/models/black-forest-labs/FLUX.1-schnell',
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
