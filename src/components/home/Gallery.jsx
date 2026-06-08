@@ -12,17 +12,37 @@ export default function Gallery() {
 
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        {/* Gallery Item 1: Medical 3D */}
+        {/* Gallery Item 1: Medical 2D */}
+        <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
+          <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
+            <img src="/gallery/medical.png" alt="Clinical Neck Anatomy" className="w-full h-full object-contain" />
+            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">SVG • 32KB</div>
+          </div>
+          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Clinical Neck Anatomy</h4>
+          <p className="font-aeonik text-[12px] text-smoke">2D Medical Diagram</p>
+        </div>
+
+        {/* Gallery Item 2: Medical 3D */}
         <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
           <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
             <img src="/gallery/medical3d.png" alt="Intragastric Balloon 3D" className="w-full h-full object-contain" />
             <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">SVG • 45KB</div>
           </div>
           <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Intragastric Balloon 3D</h4>
-          <p className="font-aeonik text-[12px] text-smoke">Medical Device Illustration</p>
+          <p className="font-aeonik text-[12px] text-smoke">Medical Device 3D</p>
         </div>
 
-        {/* Gallery Item 2: Geology 3D */}
+        {/* Gallery Item 3: Physics 2D */}
+        <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
+          <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
+            <img src="/gallery/physics.png" alt="Inclined Plane Physics" className="w-full h-full object-contain" />
+            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">SVG • 14KB</div>
+          </div>
+          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Inclined Plane Physics</h4>
+          <p className="font-aeonik text-[12px] text-smoke">2D Physics Diagram</p>
+        </div>
+
+        {/* Gallery Item 4: Geology 3D */}
         <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
           <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
             <img src="/gallery/geology3d.png" alt="Glacier Cross-section 3D" className="w-full h-full object-contain" />
@@ -32,7 +52,17 @@ export default function Gallery() {
           <p className="font-aeonik text-[12px] text-smoke">Geological 3D Diagram</p>
         </div>
 
-        {/* Gallery Item 3: Biology 3D */}
+        {/* Gallery Item 5: Botany 2D */}
+        <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
+          <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
+            <img src="/gallery/botany.png" alt="Corn Plant Anatomy" className="w-full h-full object-contain" />
+            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">SVG • 28KB</div>
+          </div>
+          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Corn Plant Anatomy</h4>
+          <p className="font-aeonik text-[12px] text-smoke">2D Botanical Diagram</p>
+        </div>
+
+        {/* Gallery Item 6: Biology 3D */}
         <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
           <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
             <img src="/gallery/biology3d.png" alt="Lipid Bilayer 3D" className="w-full h-full object-contain" />
