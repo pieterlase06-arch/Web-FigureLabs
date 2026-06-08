@@ -12,34 +12,34 @@ export default function Gallery() {
 
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        {/* Gallery Item 1: Molecular */}
+        {/* Gallery Item 1: Medical */}
         <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
-          <div className="w-full aspect-[4/3] bg-void border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity">
-            <img src="/gallery/protein.png" alt="Protein Structure 3D" className="w-full h-full object-cover" />
-            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">SVG • 12KB</div>
+          <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
+            <img src="/gallery/medical.png" alt="Clinical Neck Anatomy" className="w-full h-full object-contain" />
+            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">SVG • 45KB</div>
           </div>
-          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Protein Structure 3D</h4>
-          <p className="font-aeonik text-[12px] text-smoke">Nature Cell Biology Format</p>
+          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Clinical Neck Anatomy</h4>
+          <p className="font-aeonik text-[12px] text-smoke">Medical Textbook Format</p>
         </div>
 
-        {/* Gallery Item 2: Chart */}
+        {/* Gallery Item 2: Physics */}
         <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
-          <div className="w-full aspect-[4/3] bg-void border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity">
-            <img src="/gallery/ndvi.png" alt="NDVI Distribution Heatmap" className="w-full h-full object-cover" />
-            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">PPTX • 45KB</div>
+          <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
+            <img src="/gallery/physics.png" alt="Inclined Plane Dynamics" className="w-full h-full object-contain" />
+            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">PPTX • 12KB</div>
           </div>
-          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">NDVI Distribution Heatmap</h4>
-          <p className="font-aeonik text-[12px] text-smoke">Science Journal Guidelines</p>
+          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Inclined Plane Dynamics</h4>
+          <p className="font-aeonik text-[12px] text-smoke">Educational Diagram</p>
         </div>
 
-        {/* Gallery Item 3: Map */}
+        {/* Gallery Item 3: Botany */}
         <div className="flex flex-col bg-obsidian-canvas border border-onyx-edge p-4 hover:border-silver transition-colors cursor-pointer group">
-          <div className="w-full aspect-[4/3] bg-void border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity">
-            <img src="/gallery/network.png" alt="Neural Network Graph" className="w-full h-full object-cover" />
-            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">SVG • 230KB</div>
+          <div className="w-full aspect-[4/3] bg-white border border-onyx-edge mb-4 relative overflow-hidden group-hover:opacity-90 transition-opacity flex items-center justify-center p-2">
+            <img src="/gallery/botany.png" alt="Zea Mays Morphology" className="w-full h-full object-contain" />
+            <div className="absolute bottom-2 right-2 text-[9px] font-input text-white bg-black/60 px-2 py-1 rounded">SVG • 85KB</div>
           </div>
-          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Neural Network Architecture</h4>
-          <p className="font-aeonik text-[12px] text-smoke">IEEE Standard Formatting</p>
+          <h4 className="font-aeonik font-bold text-[13px] text-frost-text mb-1 group-hover:text-amber-whisper transition-colors">Zea Mays Morphology</h4>
+          <p className="font-aeonik text-[12px] text-smoke">Botanical Journal Guidelines</p>
         </div>
 
       </div>
